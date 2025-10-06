@@ -1,12 +1,5 @@
-nombre=6
+nombre = int(input("¿Qué tabla de multiplicar hasta el 10 quieres?: "))
 
-print (int (nombre))*1
-print (int (nombre))*2
-print (int (nombre))*3
-print (int (nombre))*4
-print (int (nombre))*5
-print (int (nombre))*6
-print (int (nombre))*7
-print (int (nombre))*8
-print (int (nombre))*9
-print (int (nombre))*10
+for i in range(11):
+    resultado = i * nombre
+    print(resultado)
