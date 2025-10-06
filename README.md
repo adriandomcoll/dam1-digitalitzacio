@@ -1,2 +1,2 @@
-# dam1-digitalitzacio
-# dfdfldfll
+## Requisits Funcionals TapatApp
+[Requisits funcionals TapatApp](requisits.md)
