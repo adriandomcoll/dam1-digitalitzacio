@@ -30,11 +30,9 @@ L’objectiu de TapatApp consisteix en proporcionar a totes les famílies afecta
 Per poder fer servir la app, s'ha de auntentificar la persona amb l'email y una contraseña.
 Actors: Admin, metges, tutors, cuidadors, infant
 
-RF2: Registre Tutor
+- RF2: Registre Tutor
 Que el tutor doni d'alta a l'infant, al seus medics y als altres cuidadors  
 
 - RF3: Desar l'informació a la base de dades
 Enregistrar les dades de cada usuari una base de dades
-Actors:
-
-- RNF1:
+Actors: Admin
