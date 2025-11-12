@@ -5,3 +5,4 @@ for num in list_num:
     invertido.insert(0, num) 
 
 print(invertido)
+
