@@ -1,0 +1,22 @@
+flowchart LR
+    %% Bloc Client
+    subgraph BlocClient["Bloc Client"]
+        VC["Visita (Input Nom)"]
+        DaoC["DaoClient (getUserName)"]
+        VC <--> DaoC
+    end
+
+    %% Petición HTTP
+    DaoC -- "Petición HTTP" --> WS
+
+    %% Bloc Servidor
+    subgraph BlocServidor["Bloc Servidor"]
+        WS["WebService (getUserByName)"]
+        DaoS["Dao (getUserByName)"]
+        List["Lista Data Users"]
+        WS <--> DaoS
+        DaoS <--> List
+    end
+
+    %% Respuesta HTTP
+    WS -- "Respuesta HTTP" --> DaoC
