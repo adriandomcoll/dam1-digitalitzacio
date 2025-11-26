@@ -21,5 +21,5 @@ Aqui cosas VsCode
 
 ## Prototip 1
 
-[Digrama d'arquitectura prototip 1]
-[TapatApp\img\prototipMermaid.PNG](TapatApp\charts\diagramaprototip.mermaid)
+[Digrama d'arquitectura prototip 1](TapatApp\charts\diagramaprototip.mermaid)
+
