@@ -23,3 +23,13 @@ Aqui cosas VsCode
 
 [Digrama d'arquitectura prototip 1](TapatApp\charts\diagramaprototip.mermaid)
 
+
+## End-Points WebService
+
+Definició del En-point del WebService: 
+
+URL Server desenvolupament: http://localhost:5000/
+
+| URL | Method | Paràmetres | Descripció | Output |
+|--------------|--------------|--------------|----------|----------|
+| /user       | Dato 2       | Dato 3       |Dato 4       |Dato 5   |
