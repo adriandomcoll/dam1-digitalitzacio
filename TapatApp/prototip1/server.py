@@ -14,12 +14,19 @@ class User:
 
 
 #us1=User(username="addo",nom="Adri",password="1234",email="ado@test.es",rol="ADMIN")
+
 users = [
     User(username="addo",nom="Adri",password="1234",email="ado@test.es",rol="ADMIN"),
     User(username="addo",nom="Adri",password="1234",email="ado@test.es",rol="ADMIN"),
     User(username="addo",nom="Adri",password="1234",email="ado@test.es",rol="ADMIN"),
 ]
 
+class UserDao:
+    def __init__(self):
+        self.users=users
+        
+    def getUserByUsername(self,username):
+        return "TO-DO"
 
 app = Flask(__name__)
 
