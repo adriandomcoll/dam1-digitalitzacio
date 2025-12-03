@@ -1,5 +1,26 @@
 from flask import Flask, request, jsonify
 
+
+class User:
+    def __init__(self,username, nom, password, email, rol):
+        self.username=username
+        self.nom=nom
+        self.password=password
+        self.email=email
+        self.rol=rol
+
+    def __str__(self):
+        return self.nom
+
+
+#us1=User(username="addo",nom="Adri",password="1234",email="ado@test.es",rol="ADMIN")
+users = [
+    User(username="addo",nom="Adri",password="1234",email="ado@test.es",rol="ADMIN"),
+    User(username="addo",nom="Adri",password="1234",email="ado@test.es",rol="ADMIN"),
+    User(username="addo",nom="Adri",password="1234",email="ado@test.es",rol="ADMIN"),
+]
+
+
 app = Flask(__name__)
 
 @app.route('/user',methods=['GET'])
