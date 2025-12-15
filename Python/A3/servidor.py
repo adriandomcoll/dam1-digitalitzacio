@@ -4,17 +4,44 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 
 
-# --- GET: obtenir tots els articles ---
-@app.route('/hello', methods=['GET'])
-def hello():
-    return "Hello World"
+# Base de dades temporal (memòria)
+articles = []
 
-@app.route('/suma', methods=['GET'])
-def suma():
-    numero1 = request.args.get('a')
-    numero2 = request.args.get('b')
-    suma = int(numero1) + int(numero2)
-    return "La suma de " + numero1 + "+" + numero2 + " és = " + str(suma)
+
+
+# --- GET: obtenir tots els articles ---
+@app.route('/articles', methods=['GET'])
+def obtenir_articles():
+    return jsonify(articles), 200
+
+
+
+
+# --- POST: afegir un article nou ---
+@app.route('/articles', methods=['POST'])
+def afegir_article():
+    dades = request.get_json()
+
+
+    # Validació bàsica
+    if not dades or 'nom' not in dades or 'preu' not in dades:
+        return jsonify({'error': 'Falten camps obligatoris (nom, preu)'}), 400
+
+
+    # Crear i afegir article
+    article = {
+        'nom': dades['nom'],
+        'preu': dades['preu']
+    }
+    articles.append(article)
+    print("Hello")
+    print(article)
+    
+
+    return jsonify(article), 201
+
+
+
 
 if __name__ == '__main__':
-    app.run(debug=True,host="0.0.0.0",port="10050")
+    app.run(debug=True)
