@@ -32,15 +32,26 @@ class UserDao:
             if u.username == uname:
                 user = u.__dict__
         return user
-'''
-user_dao = UserDao()
-response=user_dao.getUserByUsername("maria")
-print(response)
-response=user_dao.getUserByUsername("AAAAA")
-print(response)
-'''
+    
+    def getAllUsers(self):
+        resposta = []
+        for u in self.users:
+            resposta.append(u.__dict__)
+        return resposta
+
+def getAllUsers(self):
+    return [u.to_dict() for u in self.users]
+
 user_dao = UserDao()
 app = Flask(__name__)
+
+def __init__(self):
+    self.users = users
+
+
+def addUser(self, user):
+    self.users.append(user)
+
 
 @app.route('/user',methods=['GET'])
 def user():
@@ -60,6 +71,16 @@ def user():
         resposta={"msg":"Falta paràmetre Username"}
     
     return jsonify(resposta)
+
+@app.route('/getuser', methods=['GET'])
+def userList(self):
+    resposta = user_dao.get
+    return jsonify(user_dao.getAllUsers())
+
+@app.route('/users', methods=['POST'])
+def addUser(self):
+    self.users.append(user)
+    return user
 
 if __name__ == '__main__':
     app.run(debug=True)
