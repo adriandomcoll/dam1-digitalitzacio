@@ -31,11 +31,9 @@ class UserDao:
                 return u.__dict__
         return None
     
-    def getAllUsers(self):
-        resposta = []
-        for u in self.users:
-            resposta.append(u.__dict__)
-        return resposta
+    def getAllUsers(self,u):
+        self.users.append(u)
+        return [user.__dict__ for user in self.users]
 
     def addUser(self, user):
         self.users.append(user)
@@ -54,17 +52,17 @@ def user():
         if resposta is None:
             resposta = {"msg": "Usuari No Trobat"}
     else:
-        resposta = {"msg": "Falta paràmetre Username"}
+        resposta = {"msg": "Falta parametre Username"}
     
     return jsonify(resposta)
 
 
-@app.route('/getuser', methods=['GET'])
+@app.route('/alluser', methods=['GET'])
 def userList():
-    return jsonify(user_dao.getAllUsers())
+    return jsonify(user_dao.getAllUsers(user))
 
 
-@app.route('/users', methods=['POST'])
+@app.route('/adduser', methods=['POST'])
 def addUser():
     data = request.get_json()
 
