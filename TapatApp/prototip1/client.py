@@ -22,7 +22,7 @@ class daoUserClient:
 
             #Crear objeto user si se encontro
             msg = user_data_raw['msg']
-            if msg:
+            if 'msg' in user_data_raw.keys():
                 return None
             
             #Si no ha trobat return None
