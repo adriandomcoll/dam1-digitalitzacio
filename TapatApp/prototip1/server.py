@@ -14,10 +14,10 @@ class User:
 
 
 users = [
-    User("addo", "Adri", "1234", "ado@test.es", "ADMIN"),
-    User("jodo", "John", "1234", "jodo@test.es", "ADMIN"),
-    User("maria", "Maria", "1234", "madb@test.es", "ADMIN"),
-    User("jodo", "John", "1234", "jodo@test.es", "ADMIN")
+    User(username="addo", nom="Adri", password="1234", email="addo@test.es", rol="ADMIN"),
+    User(username="jodo", nom="John", password="1234", email="jodo@test.es", rol="ADMIN"),
+    User(username="maria", nom="Maria", password="1234", email="madb@test.es", rol="ADMIN"),
+    User(username="jojo", nom="Jojo", password="1234", email="jojo@test.es", rol="ADMIN")
 ]
 
 
@@ -46,10 +46,9 @@ app = Flask(__name__)
 @app.route('/user', methods=['GET'])
 def user():
     username = request.args.get("username", default="")
-    
     if username != "":
         resposta = user_dao.getUserByUsername(username)
-        if resposta is None:
+        if resposta == None:
             resposta = {"msg": "Usuari No Trobat"}
     else:
         resposta = {"msg": "Falta parametre Username"}
