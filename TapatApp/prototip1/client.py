@@ -43,7 +43,7 @@ class ViewConsole:
         #TODO
         return None
     
-view=ViewConsole.showUserInfo
+view=ViewConsole.showUserInfo #FALTA HACER
 
   
 daoUserClient = daoUserClient()

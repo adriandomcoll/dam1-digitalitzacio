@@ -1,3 +1,6 @@
+
+# ESTO ESTA MAL, ES OTRO EJERCICIO
+
 from datetime import date
 
 
@@ -51,7 +54,7 @@ c2 = Canco(2, "Rude Boy", 3.8, album)
 
 # Comprobaciones
 print(artista.nom)
-print(len(artista.albums))        # 1
+print(len(artista.albums))        # para ver la canço 1
 print(album.titol)
-print(len(album.cancons))         # 2
+print(len(album.cancons))         # para ver la canó 2
 print(c1.album.titol)
