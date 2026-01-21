@@ -1,0 +1,20 @@
+classDiagram
+    Artista "1" --> "N" Album : té
+    Album "1" --> "N" Canco : conté
+
+    class Artista {
+        +nom: str
+        +id: int 
+    }
+
+    class Album {
+        +titol: str
+        +id: int
+        +dataLlançament: date
+    }
+
+    class Canco {
+        +titol: str
+        +id: int
+        +durada: float
+    }
