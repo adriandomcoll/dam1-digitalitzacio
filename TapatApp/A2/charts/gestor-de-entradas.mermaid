@@ -5,6 +5,7 @@ classDiagram
 
     %% Relacions
     Client "1" --> "0..*" Entrada : compra
+    Client "0..*" --> "0..*" Esdeveniment : assisteix
     Administrador "1" --> "0..*" Esdeveniment : gestiona
     Esdeveniment "1" --> "1..*" Entrada : té
 

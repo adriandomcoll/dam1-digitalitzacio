@@ -35,17 +35,25 @@ class daoUserClient:
         return None
     
 class ViewConsole:
-    def getInputUsername():
-        #TODO
-        return None
+    daoClient = daoUserClient()
     
-    def showUserInfo(username):
-        #TODO
-        return None
+    def getInputUsername(self):
+        return input("Enter username: ")
     
-view=ViewConsole.showUserInfo #FALTA HACER
+    def showUserInfo(self,username):
+        user = self.daoClient.getUserByUsername(username=username)
+        if user:
+            print(f"User Info: {user}")
+        else:
+            print(f"User with username {username} not found")
 
-  
+    
+view=ViewConsole()
+data=view.getInputUsername()
+view.showUserInfo(data) 
+
+
+#Test
 daoUserClient = daoUserClient()
 u=daoUserClient.getUserByUsername("addo")
 print(u)
