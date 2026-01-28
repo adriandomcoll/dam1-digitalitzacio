@@ -11,6 +11,15 @@ class User:
     def __str__(self):
         return self.nom
     
+class Status:
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
+
+class Role:
+    def __init__(self, id, type_rol):
+        #self de los dos 
+    
 class daoUserClient:
     def getUserByUsername(self, username): 
         #Petició Http al Webservice
