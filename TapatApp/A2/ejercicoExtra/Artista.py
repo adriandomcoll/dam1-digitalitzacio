@@ -56,5 +56,5 @@ c2 = Canco(2, "Rude Boy", 3.8, album)
 print(artista.nom)
 print(len(artista.albums))        # para ver la canço 1
 print(album.titol)
-print(len(album.cancons))         # para ver la canó 2
+print(len(album.cancons))         # para ver la cançó 2
 print(c1.album.titol)

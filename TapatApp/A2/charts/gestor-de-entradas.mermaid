@@ -1,0 +1,53 @@
+classDiagram
+    %% Herència
+    Usuari <|-- Client
+    Usuari <|-- Administrador
+
+    %% Relacions
+    Client "1" --> "0..*" Entrada : compra
+    Administrador "1" --> "0..*" Esdeveniment : gestiona
+    Esdeveniment "1" --> "1..*" Entrada : té
+
+    %% Classes
+    class Usuari {
+        +int id
+        +String nom
+        +String email
+        +String contrasenya
+        +registrar()
+        +iniciarSessio()
+        +tancarSessio()
+    }
+
+    class Client {
+        +cercarEsdeveniments()
+        +comprarEntrada()
+        +veureEntrades()
+    }
+
+    class Administrador {
+        +crearEsdeveniment()
+        +modificarEsdeveniment()
+        +eliminarEsdeveniment()
+    }
+
+    class Esdeveniment {
+        +int id
+        +String nom
+        +String descripcio
+        +Date data
+        +String ubicacio
+        +int entradesDisponibles
+        +publicar()
+        +cancelar()
+        +actualitzar()
+    }
+
+    class Entrada {
+        +int id
+        +float preu
+        +String estat
+        +marcarComVenuda()
+        +marcarComDisponible()
+        +consultarEstat()
+    }
