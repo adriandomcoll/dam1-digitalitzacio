@@ -1,0 +1,65 @@
+classDiagram
+
+class UserDao {
+    -listUsers : List<User>
+    +getAllUsers() List<User>
+    +getUserById(id:int) User
+    +addUser(u:User) void
+    +updateUser(u:User) void
+    +deleteUser(u:User) void
+    +searchByEmail(email:String) User
+}
+
+class ChildDao {
+    -listChildren : List<Child>
+    -listUserChild : List<RelationUserChild>
+    +addChild(c:Child, u:User) void
+    +getAllChildren() List<Child>
+    +getChildrenByUser(user_id:int) List<Child>
+}
+
+class TapDao {
+    -addTap(t:Tap)
+    -updateTap(t:Tap)
+    -deleteTap(t:Tap)
+    -listTaps : List<Tap>
+    +getTapsByChild(child_id:int) List<Tap>
+}
+
+class RelationUserChild {
+    +user_id:int
+    +child_id:int
+    +rol_id:int
+}
+
+class User{
+    - id
+    - username
+    - password
+    - email
+    - idrole
+}
+class Child{
+    - id
+    - child_name
+    - sleep_average
+    - treatment_id
+    - time
+}
+class Tap{
+    - id
+    - child_id
+    - status_id
+    - user_id
+    - init
+    - end
+
+}
+
+UserDao --> User : gestiona
+ChildDao --> Child : gestiona
+TapDao --> Tap : gestiona
+
+ChildDao --> RelationUserChild : usa
+ChildDao --> User : relacion
+TapDao --> Child : taps de
