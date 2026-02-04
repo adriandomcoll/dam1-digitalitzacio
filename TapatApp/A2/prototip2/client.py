@@ -18,7 +18,8 @@ class Status:
 
 class Role:
     def __init__(self, id, type_rol):
-        #self de los dos 
+        self.id = id
+        self.type_rol = type_rol
     
 class daoUserClient:
     def getUserByUsername(self, username): 
