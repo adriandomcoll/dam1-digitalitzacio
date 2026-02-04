@@ -1,80 +1,134 @@
 from flask import Flask, request, jsonify
+from dadesServer import *
 
-
-class User:
-    def __init__(self, username, nom, password, email, rol):
-        self.username = username
-        self.nom = nom
-        self.password = password
-        self.email = email
-        self.rol = rol
-
-    def __str__(self):
-        return self.nom
-
-
-users = [
-    User(username="addo", nom="Adri", password="1234", email="addo@test.es", rol="ADMIN"),
-    User(username="jodo", nom="John", password="1234", email="jodo@test.es", rol="ADMIN"),
-    User(username="maria", nom="Maria", password="1234", email="madb@test.es", rol="ADMIN"),
-    User(username="jojo", nom="Jojo", password="1234", email="jojo@test.es", rol="ADMIN")
-]
-
-
-class UserDao:
-    def __init__(self):
-        self.users = users
-        
-    def getUserByUsername(self, uname):
-        for u in self.users:
-            if u.username == uname:
-                return u.__dict__
-        return None
-    
-    def getAllUsers(self,u):
-        self.users.append(u)
-        return [user.__dict__ for user in self.users]
-
-    def addUser(self, user):
-        self.users.append(user)
-
-
-user_dao = UserDao()
 app = Flask(__name__)
 
 
-@app.route('/user', methods=['GET'])
-def user():
-    username = request.args.get("username", default="")
-    if username != "":
-        resposta = user_dao.getUserByUsername(username)
-        if resposta == None:
-            resposta = {"msg": "Usuari No Trobat"}
-    else:
-        resposta = {"msg": "Falta parametre Username"}
-    
-    return jsonify(resposta)
+class UserDao:
+
+    def getAllUsers(self):
+        return [u.__dict__ for u in users]
+
+    def getUserById(self, id):
+        for u in users:
+            if u.id == id:
+                return u.__dict__
+        return None
+
+    def addUser(self, user):
+        users.append(user)
+        return user.__dict__
 
 
-@app.route('/alluser', methods=['GET'])
-def userList():
-    return jsonify(user_dao.getAllUsers(user))
+
+class ChildDao:
+
+    def getAllChildren(self):
+        return [c.__dict__ for c in children]
+
+    def getChildrenByUser(self, user_id):
+        child_ids = [r["child_id"] for r in relation_user_child if r["user_id"] == user_id]
+        return [c.__dict__ for c in children if c.id in child_ids]
 
 
-@app.route('/adduser', methods=['POST'])
-def addUser():
+
+class TapDao:
+
+    def getTapsByChild(self, child_id):
+        return [t.__dict__ for t in taps if t.child_id == child_id]
+
+
+
+class StatusDao:
+
+    def getAllStatus(self):
+        return [s.__dict__ for s in statuses]
+
+
+
+class RoleDao:
+
+    def getAllRoles(self):
+        return [r.__dict__ for r in roles]
+
+
+
+class TreatmentDao:
+
+    def getAllTreatments(self):
+        return [t.__dict__ for t in treatments]
+
+
+user_dao = UserDao()
+child_dao = ChildDao()
+tap_dao = TapDao()
+status_dao = StatusDao()
+role_dao = RoleDao()
+treatment_dao = TreatmentDao()
+
+
+@app.route('/users', methods=['GET'])
+def get_users():
+    return jsonify(user_dao.getAllUsers())
+
+
+@app.route('/user/<int:id>', methods=['GET'])
+def get_user(id):
+    user = user_dao.getUserById(id)
+
+    if user:
+        return jsonify(user)
+
+    return jsonify({"msg": "User no trobat"}), 404
+
+
+@app.route('/user', methods=['POST'])
+def add_user():
     data = request.get_json()
 
-    user = User(
+    new_user = User(
+        data["id"],
         data["username"],
-        data["nom"],
         data["password"],
         data["email"],
-        data["rol"]
+        data["idrole"]
     )
 
-    user_dao.addUser(user)
-    return jsonify(user.__dict__), 201
+    return jsonify(user_dao.addUser(new_user)), 201
+
+
+
+@app.route('/children', methods=['GET'])
+def get_children():
+    return jsonify(child_dao.getAllChildren())
+
+
+@app.route('/children/user/<int:user_id>', methods=['GET'])
+def get_children_by_user(user_id):
+    return jsonify(child_dao.getChildrenByUser(user_id))
+
+
+
+@app.route('/taps/child/<int:child_id>', methods=['GET'])
+def get_taps_by_child(child_id):
+    return jsonify(tap_dao.getTapsByChild(child_id))
+
+
+
+@app.route('/statuses', methods=['GET'])
+def get_status():
+    return jsonify(status_dao.getAllStatus())
+
+
+
+@app.route('/roles', methods=['GET'])
+def get_roles():
+    return jsonify(role_dao.getAllRoles())
+
+
+@app.route('/treatments', methods=['GET'])
+def get_treatments():
+    return jsonify(treatment_dao.getAllTreatments())
 
 
 if __name__ == '__main__':
