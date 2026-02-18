@@ -18,6 +18,20 @@ class UserDao:
     def addUser(self, user):
         users.append(user)
         return user.__dict__
+    
+    def getUserByUsername(self, username):
+        for user in self.users:
+            if user.username == username:
+                return user.__dict__
+        return None
+    
+    def login(self, username, password):
+
+        for u in users:
+            if u.username == username and u.password == password:
+                return u
+        return None
+
 
 
 
@@ -66,8 +80,8 @@ status_dao = StatusDao()
 role_dao = RoleDao()
 treatment_dao = TreatmentDao()
 
-
-@app.route('/users', methods=['GET'])
+#GET
+@app.route('/getusers', methods=['GET'])
 def get_users():
     return jsonify(user_dao.getAllUsers())
 
@@ -81,8 +95,8 @@ def get_user(id):
 
     return jsonify({"msg": "User no trobat"}), 404
 
-
-@app.route('/user', methods=['POST'])
+#POST
+@app.route('/register', methods=['POST'])
 def add_user():
     data = request.get_json()
 
@@ -99,7 +113,7 @@ def add_user():
 
 
 @app.route('/children', methods=['GET'])
-def get_children():
+def get_childs():
     return jsonify(child_dao.getAllChildren())
 
 
@@ -129,6 +143,22 @@ def get_roles():
 @app.route('/treatments', methods=['GET'])
 def get_treatments():
     return jsonify(treatment_dao.getAllTreatments())
+
+#POST
+@app.route('/login', methods=['POST'])
+def login():
+
+    data = request.get_json()
+
+    user = user_dao.login(
+        data["username"],
+        data["password"]
+    )
+
+    if user:
+        return jsonify(user.__dict__)
+
+    return jsonify({"msg": "Login incorrecte"}), 401
 
 
 if __name__ == '__main__':
