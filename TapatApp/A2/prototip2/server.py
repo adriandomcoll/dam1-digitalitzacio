@@ -151,14 +151,25 @@ def login():
     data = request.get_json()
 
     user = user_dao.login(
+        # Deberia de validar que no sean none
         data["username"],
         data["password"]
     )
 
     if user:
-        return jsonify(user.__dict__)
+        return jsonify({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "idrole": user.idrole,
+            "msg": "Usuari Ok",
+            "coderesponse": "1"
+        }), 200
 
-    return jsonify({"msg": "Login incorrecte"}), 401
+    return jsonify({
+        "coderesponse": "0",
+        "msg": "No validat"
+    }), 400
 
 
 if __name__ == '__main__':
