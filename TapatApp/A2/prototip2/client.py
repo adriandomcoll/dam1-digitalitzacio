@@ -1,69 +1,65 @@
 import requests
 
 class User:
-    def __init__(self, username, nom, password, email, rol="ADMIN"):
-        self.username=username
-        self.nom=nom
-        self.password=password
-        self.email=email
-        self.rol=rol
+    def __init__(self, id, username, email, idrole, token):
+        self.id = id
+        self.username = username
+        self.email = email
+        self.idrole = idrole
+        self.token = token
     
     def __str__(self):
-        return self.nom
-    
-class Status:
-    def __init__(self, id, name):
-        self.id = id
-        self.name = name
+        return f"{self.username} ({self.email}) - Role: {self.idrole}"
 
-class Role:
-    def __init__(self, id, type_rol):
-        self.id = id
-        self.type_rol = type_rol
-    
+
 class daoUserClient:
-    def getUserByUsername(self, username): 
-        #Petició Http al Webservice
-        response = requests.get('http://127.0.0.1:5000/getuser?username='+username)
 
-        #Si la petició OK = code response 200
+    def login(self, username, password):
+
+        response = requests.post(
+            'http://127.0.0.1:5000/login',
+            json={
+                "username": username,
+                "password": password
+            }
+        )
+
         if response.status_code == 200:
-            #Obtenemos json
-            user_data_raw = response.json()
 
-            #Crear objeto user si se encontro
-            if 'msg' in user_data_raw.keys():
-                return None
-            
-            #Si no ha trobat return None
-            else:
-                user=User(user_data_raw['username'],user_data_raw['nom'],
-                user_data_raw['password'],user_data_raw['email'],user_data_raw['rol'])
+            data = response.json()
 
-                return user
-        
+            if data["coderesponse"] == "1":
+                return User(
+                    data["id"],
+                    data["username"],
+                    data["email"],
+                    data["idrole"],
+                    data["token"]
+                )
+
         return None
-    
+
+
 class ViewConsole:
+
     daoClient = daoUserClient()
     
-    def getInputUsername(self):
-        return input("Enter username: ")
+    def getInput(self):
+        username = input("Username: ")
+        password = input("Password: ")
+        return username, password
     
-    def showUserInfo(self,username):
-        user = self.daoClient.getUserByUsername(username=username)
+    def showLogin(self):
+        username, password = self.getInput()
+        user = self.daoClient.login(username, password)
+
         if user:
-            print(f"User Info: {user}")
+            print("Login OK")
+            print(user)
+            print("Token:", user.token)
         else:
-            print(f"User with username {username} not found")
-
-    
-view=ViewConsole()
-data=view.getInputUsername()
-view.showUserInfo(data) 
+            print("Login incorrecte")
 
 
-#Test
-daoUserClient = daoUserClient()
-u=daoUserClient.getUserByUsername("addo")
-print(u)
+view = ViewConsole()
+view.showLogin()

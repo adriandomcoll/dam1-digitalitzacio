@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from dadesServer import *
+import uuid
 
 app = Flask(__name__)
 
@@ -20,15 +21,20 @@ class UserDao:
         return user.__dict__
     
     def getUserByUsername(self, username):
-        for user in self.users:
-            if user.username == username:
-                return user.__dict__
+        for user in users:
+            if user.username == username or user.email == username:
+                return user
         return None
     
     def login(self, username, password):
-
         for u in users:
             if u.username == username and u.password == password:
+                return u
+        return None
+    
+    def getUserByToken(self, token):
+        for u in users:
+            if hasattr(u, "token") and u.token == token:
                 return u
         return None
 
@@ -80,87 +86,58 @@ status_dao = StatusDao()
 role_dao = RoleDao()
 treatment_dao = TreatmentDao()
 
-#GET
-@app.route('/getusers', methods=['GET'])
-def get_users():
-    return jsonify(user_dao.getAllUsers())
 
+# Login
 
-@app.route('/user/<int:id>', methods=['GET'])
-def get_user(id):
-    user = user_dao.getUserById(id)
-
-    if user:
-        return jsonify(user)
-
-    return jsonify({"msg": "User no trobat"}), 404
-
-#POST
-@app.route('/register', methods=['POST'])
-def add_user():
-    data = request.get_json()
-
-    new_user = User(
-        data["id"],
-        data["username"],
-        data["password"],
-        data["email"],
-        data["idrole"]
-    )
-
-    return jsonify(user_dao.addUser(new_user)), 201
-
-
-
-@app.route('/children', methods=['GET'])
-def get_childs():
-    return jsonify(child_dao.getAllChildren())
-
-
-@app.route('/children/user/<int:user_id>', methods=['GET'])
-def get_children_by_user(user_id):
-    return jsonify(child_dao.getChildrenByUser(user_id))
-
-
-
-@app.route('/taps/child/<int:child_id>', methods=['GET'])
-def get_taps_by_child(child_id):
-    return jsonify(tap_dao.getTapsByChild(child_id))
-
-
-
-@app.route('/statuses', methods=['GET'])
-def get_status():
-    return jsonify(status_dao.getAllStatus())
-
-
-
-@app.route('/roles', methods=['GET'])
-def get_roles():
-    return jsonify(role_dao.getAllRoles())
-
-
-@app.route('/treatments', methods=['GET'])
-def get_treatments():
-    return jsonify(treatment_dao.getAllTreatments())
-
-#POST
 @app.route('/login', methods=['POST'])
 def login():
 
+    token_header = request.headers.get("Authorization")
+
+    # Login por token
+    if token_header:
+        user = user_dao.getUserByToken(token_header)
+
+        if user:
+            return jsonify({
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "token": user.token,
+                "idrole": user.idrole,
+                "msg": "Usuari Ok",
+                "coderesponse": "1"
+            }), 200
+
+        return jsonify({
+            "coderesponse": "0",
+            "msg": "No validat"
+        }), 400
+
+
+    # Login normal
     data = request.get_json()
 
-    user = user_dao.login(
-        # Deberia de validar que no sean none
-        data["username"],
-        data["password"]
-    )
+    username = data.get("username")
+    password = data.get("password")
+
+    if not username or not password:
+        return jsonify({
+            "coderesponse": "0",
+            "msg": "No validat"
+        }), 400
+
+    user = user_dao.login(username, password)
 
     if user:
+        # Para generar el token
+        user.token = str(uuid.uuid4())
+
         return jsonify({
             "id": user.id,
             "username": user.username,
             "email": user.email,
+            "token": user.token,
             "idrole": user.idrole,
             "msg": "Usuari Ok",
             "coderesponse": "1"
@@ -170,6 +147,39 @@ def login():
         "coderesponse": "0",
         "msg": "No validat"
     }), 400
+
+
+# Child
+
+@app.route('/child', methods=['POST'])
+def get_child():
+
+    token = request.headers.get("Authorization")
+
+    if not token:
+        return jsonify({
+            "coderesponse": "0",
+            "msg": "No validat"
+        }), 400
+
+    user = user_dao.getUserByToken(token)
+
+    if not user and not iduser.is_integer:
+        return jsonify({
+            "coderesponse": "0",
+            "msg": "No validat"
+        }), 400
+
+    data = request.get_json()
+    iduser = data.get("iduser")
+
+    childs = child_dao.getChildrenByUser(iduser)
+
+    return jsonify({
+        "msg": str(len(childs)),
+        "coderesponse": "1",
+        "children": childs
+    }), 200
 
 
 if __name__ == '__main__':
