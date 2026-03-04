@@ -1,4 +1,5 @@
-# Dades d'exemple amb List 
+# Dades d'exemple amb List (NO TOCAR) 
+
 # Clase User 
 class User:
     def __init__(self, id, username, password, email, idrole):

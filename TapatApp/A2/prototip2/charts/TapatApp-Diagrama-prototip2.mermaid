@@ -2,6 +2,7 @@ classDiagram
 
 class UserDao {
     -listUsers : List<User>
+    +login (u:User)  User
     +getAllUsers() List<User>
     +getUserById(id:int) User
     +addUser(u:User) void
@@ -13,7 +14,10 @@ class UserDao {
 class ChildDao {
     -listChildren : List<Child>
     -listUserChild : List<RelationUserChild>
+    +getChilds (u:User) 
     +addChild(c:Child, u:User) void
+    +updateChild(c:Child) void
+    +deleteChild(c:Child) void
     +getAllChildren() List<Child>
     +getChildrenByUser(user_id:int) List<Child>
 }

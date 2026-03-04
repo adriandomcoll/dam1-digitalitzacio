@@ -1,5 +1,3 @@
-
-
 class ViewConsole:
 
     def viewShowmenu(self):

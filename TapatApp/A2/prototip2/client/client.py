@@ -1,9 +1,10 @@
 import requests
 
 class User:
-    def __init__(self, id, username, email, idrole, token):
+    def __init__(self, id, username, password ,email, idrole, token):
         self.id = id
         self.username = username
+        self.password = password
         self.email = email
         self.idrole = idrole
         self.token = token
@@ -32,6 +33,7 @@ class daoUserClient:
                 return User(
                     data["id"],
                     data["username"],
+                    data["password"],
                     data["email"],
                     data["idrole"],
                     data["token"]
