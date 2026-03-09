@@ -52,3 +52,4 @@ class ViewConsole:
 viewConsole=ViewConsole()
 viewConsole.viewGeneral()
 
+
