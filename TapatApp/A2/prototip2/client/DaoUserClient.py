@@ -1,6 +1,5 @@
 import requests
-from client import *
-from flask import jsonify
+from User import *
 
 class DaoUserClient:
     base_URL = "http://localhost:5000"
@@ -29,7 +28,8 @@ class DaoUserClient:
         else:
             return None
 #TEST        
-daoClient=DaoUserClient()
-user=User("", "mare", "12345", "", "", "")
-resposta=daoClient.login(user)
-print(resposta)
+#daoClient=DaoUserClient()
+#user=User("", "mare", "12345", "", "", "")
+#resposta=daoClient.login(user)
+#print(resposta)
+

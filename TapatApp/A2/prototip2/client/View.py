@@ -1,4 +1,9 @@
+from User import *
+from DaoUserClient import *
+
 class ViewConsole:
+
+    daoClient = DaoUserClient()
 
     def viewShowmenu(self):
         print("1: Login")
@@ -7,7 +12,7 @@ class ViewConsole:
             option=input("Enter Option: ")
             if(option.isdigit()):
                 optionInt=int(option)
-                if (option >= 1 and option <= 2):
+                if (optionInt > 0 and optionInt < 3):
                     return optionInt
                
             print("ERROR: Introduce un valor correcto")
@@ -29,5 +34,21 @@ class ViewConsole:
         print("Introduce el username/email i el password")
         username=input("Username o email: ")
         passwd=input("Password: ")
-        # DaoUserClient ha de fer login
-        # Depenent de la resposta va a ser child o User not Autheticated
+        user=User("",username, passwd, "", "", "")
+        resposta_user = self.daoClient.login(user)
+
+        if resposta_user:
+            self.viewUser(resposta_user)
+        else:
+            self.viewUserNotAuthenticated()
+
+    def viewUser(self,user):
+        print("View User Authenticated")
+        print(user)
+
+    def viewUserNotAuthenticated(self):
+        print("User NOT Authenticated")
+
+viewConsole=ViewConsole()
+viewConsole.viewGeneral()
+
