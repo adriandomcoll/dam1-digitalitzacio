@@ -37,7 +37,7 @@ class ViewConsole:
         user=User("",username, passwd, "", "", "")
         resposta_user = self.daoClient.login(user)
 
-        if resposta_user:
+        if (resposta_user):
             self.viewUser(resposta_user)
         else:
             self.viewUserNotAuthenticated()
@@ -45,9 +45,18 @@ class ViewConsole:
     def viewUser(self,user):
         print("View User Authenticated")
         print(user)
+        #viewChild()
 
     def viewUserNotAuthenticated(self):
+        print("View User")
         print("User NOT Authenticated")
+    
+    def viewChild(self, user, child):
+        print("=== CHILDS ===")
+        items = child if isinstance(child, (list, tuple)) else [child]
+        for i, c in enumerate(items, start=1):
+            print(f"-- Child {i} --")
+            print(c)
 
 viewConsole=ViewConsole()
 viewConsole.viewGeneral()

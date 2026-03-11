@@ -3,6 +3,9 @@ from dataclasses import dataclass, asdict
 from flask import jsonify
 
 class UserDao:
+    def __init__(self):
+        self.users = users
+    
     def getAllUsers(self):
         return [u.__dict__ for u in users]
 
@@ -23,7 +26,7 @@ class UserDao:
         return None
     
     def login(self, username, password):
-        for u in users:
+        for u in self.users:
             if u.username == username and u.password == password:
                 return u
         return None
@@ -35,6 +38,10 @@ class UserDao:
         return None
     
 class ChildDao:
+
+    def __init__(self):
+        self.childs = children
+        self.relation_user_child = relation_user_child
 
     def getAllChildren(self):
         return [c.__dict__ for c in children]

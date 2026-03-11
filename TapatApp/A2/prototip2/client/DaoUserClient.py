@@ -19,7 +19,7 @@ class DaoUserClient:
         if response.status_code == 200:
             user_data_raw = response.json()
             code_response=user_data_raw['coderesponse']
-            if code_response == '1':
+            if str('coderesponse') == "1":
                 user=User(user_data_raw['id'], user_data_raw['username'],
                            "" ,user_data_raw['email'], user_data_raw['idrole'], user_data_raw['token'])
                 return user
