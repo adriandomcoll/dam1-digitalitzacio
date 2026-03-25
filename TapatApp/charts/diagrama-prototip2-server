@@ -1,0 +1,71 @@
+classDiagram
+    %% === ENTITATS DE MODEL ===
+    class User {
+        -int id
+        -str username
+        -str password
+        -str email
+        -int idrole
+        -str token
+        +__init__(id, username, password, email, idrole, token)
+        +__str__() str
+    }
+
+    class Child {
+        -int id
+        -str child_name
+        -float sleep_average
+        -int treatment_id
+        -int time
+        +__init__(id, child_name, sleep_average, treatment_id, time)
+    }
+
+    class Tap {
+        -int id
+        -int child_id
+        -int status_id
+        -int user_id
+        -str init
+        +__init__(id, child_id, status_id, user_id, init)
+    }
+
+    %% === CAPA DAO (ACCESS LAYER) - SERVIDOR ===
+    class UserDAO {
+        -list users
+        +getAllUsers() list
+        +getUserByUsername(username) dict
+        +login(identifier, password) dict
+    }
+
+    class ChildDAO {
+        -list childs
+        -list relation_user_child
+        +getChilds(User) list<Child>
+    }
+
+
+    class TapDAO {
+        -list taps
+        +getTaps(Child) list<Tap>
+    }
+
+
+    class WebService {
+        - UserDAO daoUser
+        - ChildDAO daoChild
+        - TapDAO daoTap
+        +getAllUsers() String<Json>
+        +getUserByUsername() String<Json>
+        +login() String<Json>
+        +getChilds() String<Json>
+        +getTaps() String<Json>
+    }
+
+    UserDAO --> User : uses
+    ChildDAO --> Child : uses
+    ChildDAO --> User : uses
+    TapDAO --> Tap : uses
+    TapDAO --> Child : uses
+    WebService --> UserDAO : uses
+    WebService --> ChildDAO : uses
+    WebService --> TapDAO : uses
