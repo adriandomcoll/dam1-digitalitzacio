@@ -1,79 +1,36 @@
-from dadesServer import *
 from dataclasses import dataclass, asdict
 from flask import jsonify
+import mysql.connector
 
 class UserDao:
-    def __init__(self):
-        self.users = users
+
+    def connectBBDD(self):
+        connection = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="root",
+            database="tapatapp"
+        )
+        return connection
+
+    def login(self, identifier, password):
+        # Conexión a BBDD
+        con=self.connectBBDD()
+        cursor = con.cursor(dictionary=True)
+        query = """
+            SELECT * FROM User
+            WHERE (username = %s OR email = %s) AND password = %s
+        """
+        cursor.execute(query,(identifier,identifier,password))
+        user = cursor.fetchone()
+        cursor.close()
+        con.close()
+        # Query para validar Usuario 
+            # if return 1 = registro User OK
+            # else None
+        # Cerrar conexión
+        return user
     
-    def getAllUsers(self):
-        return [u.__dict__ for u in users]
-
-    def getUserById(self, id):
-        for u in users:
-            if u.id == id:
-                return u.__dict__
-        return None
-
-    def addUser(self, user):
-        users.append(user)
-        return user.__dict__
-    
-    def getUserByUsername(self, username):
-        for user in users:
-            if user.username == username or user.email == username:
-                return user
-        return None
-    
-    def login(self, username, password):
-        for u in self.users:
-            if u.username == username and u.password == password:
-                return u
-        return None
-    
-    def getUserByToken(self, token):
-        for u in users:
-            if hasattr(u, "token") and u.token == token:
-                return u
-        return None
-    
-class ChildDao:
-
-    def __init__(self):
-        self.childs = children
-        self.relation_user_child = relation_user_child
-
-    def getAllChildren(self):
-        return [c.__dict__ for c in children]
-
-    def getChildrenByUser(self, user_id):
-        child_ids = [r["child_id"] for r in relation_user_child if r["user_id"] == user_id]
-        return [c.__dict__ for c in children if c.id in child_ids]
-
-
-
-class TapDao:
-
-    def getTapsByChild(self, child_id):
-        return [t.__dict__ for t in taps if t.child_id == child_id]
-
-
-
-class StatusDao:
-
-    def getAllStatus(self):
-        return [s.__dict__ for s in statuses]
-
-
-
-class RoleDao:
-
-    def getAllRoles(self):
-        return [r.__dict__ for r in roles]
-
-
-
-class TreatmentDao:
-
-    def getAllTreatments(self):
-        return [t.__dict__ for t in treatments]
+dao = UserDao()
+u = dao.login("mare", "mare")
+print(u)
