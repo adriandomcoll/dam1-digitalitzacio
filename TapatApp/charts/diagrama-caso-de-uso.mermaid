@@ -1,0 +1,14 @@
+flowchart LR
+  subgraph Sistema["Sistema"]
+        UC1["Iniciar sesión"]
+        UC2["Ver perfil"]
+        UC3["Editar perfil"]
+        UC4["Ver Childs"]
+        UC5["Gestionar Childs"]
+        UC6["Asignar tareas a Child"]
+  end
+
+    Tutor(("Tutor")) --> UC1 & UC2 & UC3 & UC4 & UC5 & UC6
+    Cuidador(("Cuidador")) --> UC1 & UC2 & UC3 & UC4
+
+    UC7["Validar Token" -- Uses] -.-> UC4
