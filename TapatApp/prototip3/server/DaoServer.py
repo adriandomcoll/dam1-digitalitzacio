@@ -26,44 +26,64 @@ class UserDao:
         """
         cursor.execute(query,(identifier,identifier,password))
         user = cursor.fetchone()
+        token= ""
+        if user:
+            token = self.setTokenUser(user['username'])
+            user['token'] = token
+            print(user)
         cursor.close()
         con.close()
         return user
+    
     def setTokenUser (self, username):
-        # conectar a BBDD
+        # Connect a BBDD
         con=self.connectBBDD()
         cursor = con.cursor(dictionary=True)
-        # generar Token
-        token=self.getHash(username)
+
+        # Generate Token
+        token=self.getHash()
 
         # Update a BBDD camp token al usuari per username
-        query = "UPDATE User SET token ='"+token +"' WHERE username" + username
-        print(query)
+        print(type(token))
+        query = "UPDATE User SET token='"+ token +"' WHERE username= '" + username + "'"
+
         cursor.execute(query)
-        # close BBDD
+        con.commit()
+
+        # Close BBDD
         cursor.close()
         con.close()
+        return token
     
-    def getHash(self, username):
+    def getHash(self):
         miliseconds = str(time() * 1000)
-        data = username + miliseconds
+        data = miliseconds
         hash_object = hashlib.sha256(data.encode('utf-8'))
-        return hash_object.hexdigest()
+        return hash_object.hexdigest() + ""
 
-dao = UserDao()
-print(dao.getHash("user1"))
-
+'''dao = UserDao()
 u = dao.login("mare", "mare")
-print(u)
 
 
-miliseconds = str(time() * 1000)
-print("Time in milliseconds since epoch", miliseconds)
+class ChildDao:
 
-data = "Holas " + miliseconds
-print(data)
+    def __init__(self):
+        self.childs = children
+        self.relation_user_child = relation_user_child
+
+    def getAllChildren(self):
+        return [c.__dict__ for c in self.childs]
+
+    def getChildrenByUser(self, user_id):
+        child_ids = [r["child_id"] for r in self.relation_user_child if r["user_id"] == user_id]
+        return [c.__dict__ for c in self.childs if c.id in child_ids]
+
 # Crea el objeto SHA-256
 
 # Obtener el resultado en formato hexadecimal 
 # token = hash_object.hexdigest()
 # print(token)
+
+
+#TODO Endpoint del Login
+'''
