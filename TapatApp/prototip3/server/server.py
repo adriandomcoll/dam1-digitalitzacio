@@ -6,7 +6,7 @@ import uuid
 app = Flask(__name__)
 
 user_dao = UserDao()
-#child_dao = ChildDao()
+child_dao = ChildDao()
 
 
 
@@ -15,7 +15,7 @@ user_dao = UserDao()
 @app.route('/login', methods=['POST'])
 def login():
 
-    token_header = request.headers.get("Authorization")
+    token_header = request.headers.get("apikey")
 
     # Login por token
     if token_header:
@@ -23,11 +23,11 @@ def login():
 
         if user:
             return jsonify({
-                "id": user.id,
-                "username": user.username,
-                "password": user.password,
-                "email": user.email,
-                "token": user.token,
+                "id": user['id'],
+                "username": user['username'],
+                "password": user['password'],
+                "email": user['email'],
+                "token": user['token'],
                 "msg": "Usuari Ok",
                 "coderesponse": "1"
             }), 200
@@ -54,8 +54,6 @@ def login():
     print (user)
 
     if user:
-        # Para generar el token
-
         return jsonify({
             "id": user['id'],
             "username": user['username'],
@@ -73,37 +71,33 @@ def login():
 
 
 # Child
-'''
+
 @app.route('/child', methods=['POST'])
 def get_child():
 
-    token = request.headers.get("Authorization")
+    token = request.headers.get("apikey")
+    user = None
+    
+    if token:
+        user = user_dao.getUserByToken(token)
 
-    if not token:
+    if not user:
         return jsonify({
             "coderesponse": "0",
-            "msg": "No validat"
-        }), 400
-
-    user = user_dao.getUserByToken(token)
-
-    if not user and not iduser.is_integer:
-        return jsonify({
-            "coderesponse": "0",
-            "msg": "No validat"
+            "msg": "Acces not granted"
         }), 400
 
     data = request.get_json()
-    iduser = data.get("iduser")
-
-    childs = child_dao.getChildrenByUser(iduser)
+    childs = child_dao.getChildrenByUser(user['username'])
 
     return jsonify({
         "msg": str(len(childs)),
         "coderesponse": "1",
         "children": childs
     }), 200
-'''
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
+

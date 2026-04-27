@@ -16,6 +16,18 @@ class UserDao:
         )
         return connection
 
+    def getUserByToken(self, token):
+        # Conexión a BBDD
+        con=self.connectBBDD()
+        cursor = con.cursor(dictionary=True)
+        query = "SELECT * FROM User WHERE token =  '" + token + "'"
+        
+        cursor.execute(query)
+        user = cursor.fetchone()
+        cursor.close()
+        con.close()
+        return user
+
     def login(self, identifier, password):
         # Conexión a BBDD
         con=self.connectBBDD()
@@ -61,10 +73,20 @@ class UserDao:
         hash_object = hashlib.sha256(data.encode('utf-8'))
         return hash_object.hexdigest() + ""
 
-'''dao = UserDao()
-u = dao.login("mare", "mare")
+class ChildDao:
+
+    def getChilds(self,username):
+        return "" #TODO
 
 
+
+dao = UserDao()
+u = dao.getUserByToken("0d68b59a19040fdcd094a60ad2e5f8bfc0f59acd46810213aec25e8afb3f0926")
+print(u)
+u = dao.getUserByToken("token invalido")
+print(u)
+
+'''
 class ChildDao:
 
     def __init__(self):
