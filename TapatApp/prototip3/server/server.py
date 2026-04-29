@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-from dadesServer import *
 from DaoServer import *
 import uuid
 
@@ -87,17 +86,30 @@ def get_child():
             "msg": "Acces not granted"
         }), 400
 
-    data = request.get_json()
-    childs = child_dao.getChildrenByUser(user['username'])
+    # Pasar el token directamente
+    childs = child_dao.getChildrenByUser(token)
 
     return jsonify({
-        "msg": str(len(childs)),
+        "msg": "Numero de Childs: " + str(len(childs)),
         "coderesponse": "1",
         "children": childs
     }), 200
 
 
+# All childs
+@app.route('/childs', methods=['POST'])
+def get_childs():
+
+    token = request.headers.get("apikey")
+
+    data = request.get_json()
+    childs = child_dao.getChilds()
+
+    return jsonify({
+        "msg": "Numero de Childs: " + str(len(childs)),
+        "coderesponse": "1",
+        "children": childs
+    }), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
-

@@ -3,62 +3,75 @@ from DaoUserClient import *
 
 class ViewConsole:
 
-    daoClient = DaoUserClient()
-
-    def viewShowmenu(self):
+    daoClient=DaoUserClient()
+    token=""
+   
+    def viewShowMenu(self):
         print("1: Login")
-        print("2: Quit")
+        print("2: Login Token")
+        print("3: Child")
+        print("4: Quit")
         while(True):
             option=input("Enter Option: ")
-            if(option.isdigit()):
+            if(option.isdigit):
                 optionInt=int(option)
-                if (optionInt > 0 and optionInt < 3):
+                if(optionInt >0 and optionInt <3):
                     return optionInt
-               
-            print("ERROR: Introduce un valor correcto")
+            
+            print("Error: Introdueix una opció correcta")
 
+        
     def viewGeneral(self):
         option=-1
         while(option!=2):
-            option=self.viewShowmenu()
+            option=self.viewShowMenu()
             match option:
                 case 1:
-                    self.viewLogin()
                     #login
+                    self.viewLogin()
                 case 2:
-                    #Quit
-                    print("Saliendo de la aplicación...")
+                    #login Token
+                    self.viewLoginToken(self.token)
+                case 3:
+                    #Childs
+                    print("Childs")
+                    #self.viewLogin()
+                case 4:
+                    # Quit
+                    print("Adeu, Gràcies per utilitzar l'aplicació")
+
+    def viewLoginToken(self, token):
+        print("View LOGIN TOKEN")
+        resposta_user=self.daoClient.loginToken(token)
+        if(resposta_user):
+            self.viewUser(resposta_user)
+            self.token=resposta_user.token
+        else:
+            self.viewUserNotAutenticated()
 
     def viewLogin(self):
         print("View LOGIN")
-        print("Introduce el username/email i el password")
+        print("Introdueix el Username o email i el password")
         username=input("Username o email: ")
         passwd=input("Password: ")
-        user=User("",username, passwd, "", "", "")
-        resposta_user = self.daoClient.login(user)
-
-        if (resposta_user):
+        user=User("", username, passwd, "", "", "")
+        resposta_user=self.daoClient.login(user)
+        if(resposta_user):
             self.viewUser(resposta_user)
+            self.token=resposta_user.token
         else:
-            self.viewUserNotAuthenticated()
-
+            self.viewUserNotAutenticated()
+    
     def viewUser(self,user):
         print("View User Authenticated")
         print(user)
-        #viewChild()
-
-    def viewUserNotAuthenticated(self):
+    
+    def viewUserNotAutenticated(self):
         print("View User")
         print("User NOT Authenticated")
-    
-    def viewChild(self, user, child):
-        print("=== CHILDS ===")
-        items = child if isinstance(child, (list, tuple)) else [child]
-        for i, c in enumerate(items, start=1):
-            print(f"-- Child {i} --")
-            print(c)
+
 
 viewConsole=ViewConsole()
+
 viewConsole.viewGeneral()
-
-
+ 
