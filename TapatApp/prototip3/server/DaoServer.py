@@ -103,66 +103,44 @@ class ChildDao:
         con.close()
         return children
     
-class TapDAO:
+class TapDao:
 
-    def setTap (self,user:User.User,child:Child.Child,status:int):
-        
+    def setTap(self, user_id, child_id, status):
         con = self.connectBBDD()
-        sendSQL = con.cursor(dictionary=True)
-
-        query = "INSERT INTO Tap(child_id,status_id,user_id)\
-                VALUES (%s, %s, %s)"
-
-        sendSQL.execute(query,(child.id,status,user.id))
+        cursor = con.cursor(dictionary=True)
+        query = "INSERT INTO Tap(child_id, status_id, user_id) VALUES (%s, %s, %s)"
+        cursor.execute(query, (child_id, status, user_id))
         con.commit()
-
-        sendSQL.close()
+        cursor.close()
         con.close()
     
-    def getTapById(self,id:int):
-        
+    def getTapById(self, id):
         con = self.connectBBDD()
-        sendSQL = con.cursor(dictionary=True)
-
-        query = "SELECT *\
-                FROM Tap\
-                WHERE id = %i"
-        sendSQL.execute(query,(id))
-
-        result=sendSQL.fetchall()
-
-        sendSQL.close()
-        con.close
+        cursor = con.cursor(dictionary=True)
+        query = "SELECT * FROM Tap WHERE id = %s"
+        cursor.execute(query, (id,))
+        result = cursor.fetchall()
+        cursor.close()
+        con.close()
         return result
             
     
-    def getTapByUserId(self,id:int):
-        
+    def getTapByUserId(self, id):
         con = self.connectBBDD()
-        sendSQL = con.cursor(dictionary=True)
-
-        query = "SELECT *\
-                FROM Tap\
-                WHERE user_id = %i"
-        
-        sendSQL.execute(query,(id))
-        result=sendSQL.fetchall()
-        
-        sendSQL.close()
-        con.close
-
+        cursor = con.cursor(dictionary=True)
+        query = "SELECT * FROM Tap WHERE user_id = %s"
+        cursor.execute(query, (id,))
+        result = cursor.fetchall()
+        cursor.close()
+        con.close()
         return result
     
-    def getTapByChildId(self,id:int):
-        
+    def getTapByChildId(self, id):
         con = self.connectBBDD()
-        sendSQL = con.cursor(dictionary=True)
-        query = "SELECT *\
-                FROM Tap\
-                WHERE child_id = %i"
-        sendSQL.execute(query,(id))
-        result=sendSQL.fetchall()
-
-        sendSQL.close()
-        con.close
+        cursor = con.cursor(dictionary=True)
+        query = "SELECT * FROM Tap WHERE child_id = %s"
+        cursor.execute(query, (id,))
+        result = cursor.fetchall()
+        cursor.close()
+        con.close()
         return result
