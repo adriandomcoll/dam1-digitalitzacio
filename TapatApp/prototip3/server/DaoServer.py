@@ -102,3 +102,67 @@ class ChildDao:
         cursor.close()
         con.close()
         return children
+    
+class TapDAO:
+
+    def setTap (self,user:User.User,child:Child.Child,status:int):
+        
+        con = self.connectBBDD()
+        sendSQL = con.cursor(dictionary=True)
+
+        query = "INSERT INTO Tap(child_id,status_id,user_id)\
+                VALUES (%s, %s, %s)"
+
+        sendSQL.execute(query,(child.id,status,user.id))
+        con.commit()
+
+        sendSQL.close()
+        con.close()
+    
+    def getTapById(self,id:int):
+        
+        con = self.connectBBDD()
+        sendSQL = con.cursor(dictionary=True)
+
+        query = "SELECT *\
+                FROM Tap\
+                WHERE id = %i"
+        sendSQL.execute(query,(id))
+
+        result=sendSQL.fetchall()
+
+        sendSQL.close()
+        con.close
+        return result
+            
+    
+    def getTapByUserId(self,id:int):
+        
+        con = self.connectBBDD()
+        sendSQL = con.cursor(dictionary=True)
+
+        query = "SELECT *\
+                FROM Tap\
+                WHERE user_id = %i"
+        
+        sendSQL.execute(query,(id))
+        result=sendSQL.fetchall()
+        
+        sendSQL.close()
+        con.close
+
+        return result
+    
+    def getTapByChildId(self,id:int):
+        
+        con = self.connectBBDD()
+        sendSQL = con.cursor(dictionary=True)
+        query = "SELECT *\
+                FROM Tap\
+                WHERE child_id = %i"
+        sendSQL.execute(query,(id))
+        result=sendSQL.fetchall()
+
+        sendSQL.close()
+        con.close
+        return result
