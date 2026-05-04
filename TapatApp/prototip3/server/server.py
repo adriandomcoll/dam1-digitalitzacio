@@ -1,13 +1,18 @@
 from flask import Flask, request, jsonify
-from DaoServer import *
-import uuid
+from DaoServer import UserDao, ChildDao
+from dataclasses import dataclass, asdict
+
+@dataclass
+class ApiResponse():
+    msg: str
+    coderesponse: str
+    data: list
+
+# Instantiate DAO
+user_dao=UserDao()
+child_dao=ChildDao()
 
 app = Flask(__name__)
-
-user_dao = UserDao()
-child_dao = ChildDao()
-
-
 
 # Login
 
@@ -72,28 +77,31 @@ def login():
 # Child
 
 @app.route('/child', methods=['POST'])
-def get_child():
-
-    token = request.headers.get("apikey")
-    user = None
+def child():
+    token=request.headers.get("api-token")
+    u=None
+    if(token):
+        # comprovar que el token existeix a un usuari
+        print(token)
+        u=user_dao.getUserByToken(token)
+        print("USER:", u)
     
-    if token:
-        user = user_dao.getUserByToken(token)
-
-    if not user:
-        return jsonify({
-            "coderesponse": "0",
-            "msg": "Acces not granted"
-        }), 400
-
-    # Pasar el token directamente
-    childs = child_dao.getChildrenByUser(token)
-
-    return jsonify({
-        "msg": "Numero de Childs: " + str(len(childs)),
-        "coderesponse": "1",
-        "children": childs
-    }), 200
+    if u:
+        #data = request.get_json()
+        childs=child_dao.getChilds(str(u['id']))
+        response = ApiResponse(
+                msg="GetChilds",
+                coderesponse="1",
+                data=childs
+            )
+        return jsonify(asdict(response)),200
+    else: 
+        response = ApiResponse(
+            msg="Acces not granted",
+            coderesponse="0",
+            data=""
+        )
+        return jsonify(asdict(response)),400
 
 
 # All childs
