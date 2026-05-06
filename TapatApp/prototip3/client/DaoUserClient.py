@@ -17,10 +17,9 @@ class DaoUserClient:
         }
         response = requests.post(URL_peticio, json=params_POST)
         if response.status_code == 200:
-            user_data_raw = response.json()
-            code_response=user_data_raw['coderesponse']
+            user_raw = response.json()
+            code_response=user_raw['coderesponse']
             if code_response == '1': # Usuari Validat  (self, id, username, password, email, idrole,token):
-                user_raw=user_data_raw['data']
                 user=User(user_raw['id'], user_raw['username']
                           , "" ,user_raw['email']
                           , "", user_raw['token'])
@@ -40,7 +39,7 @@ class DaoUserClient:
             user_data_raw = response.json()
             code_response=user_data_raw['coderesponse']
             if code_response == '1': # Usuari Validat  (self, id, username, password, email, idrole,token):
-                user_raw=user_data_raw['data']
+                user_raw=user_data_raw
                 user=User(user_raw['id'], user_raw['username']
                           , "" ,user_raw['email']
                           , "", user_raw['token'])
@@ -54,10 +53,9 @@ class DaoUserClient:
         headers = {'Content-Type': 'application/json', 'apikey': token}
         response = requests.post(URL_peticio,headers=headers) 
         if response.status_code == 200:
-            user_data_raw = response.json()
-            code_response=user_data_raw['coderesponse']
+            user_raw = response.json()
+            code_response=user_raw['coderesponse']
             if code_response == '1': # Usuari Validat  (self, id, username, password, email, idrole,token):
-                user_raw=user_data_raw['data']
                 return user_raw
         else:
             return None

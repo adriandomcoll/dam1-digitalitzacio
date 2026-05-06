@@ -136,8 +136,8 @@ class ChildDao:
     def get_taps(self, child_id):
         return self.getTapByChildId(child_id)
 
-'''    
+
 cdao=ChildDao()
 res=cdao.getTapByChildId("1")
 print(res)
-'''
+

@@ -32,7 +32,7 @@ class ViewConsole:
                     self.viewLogin()
                 case 2:
                     #login Token
-                    self.viewLoginToken(self.token)
+                    self.viewLoginToken()
                 case 3:
                     #Childs
                     self.viewChilds(self.token)
@@ -52,14 +52,18 @@ class ViewConsole:
             print(resposta_child)              
         
 
-    def viewLoginToken(self, token):
+    def viewLoginToken(self):
         print("View LOGIN TOKEN")
-        resposta_user=input("Introdueix el token: ")
-        token=resposta_user
-        self.daoClient.loginToken(token)
-        if(resposta_user):
-            self.viewUser(resposta_user)
-            self.token=resposta_user.token
+        token_input = input("Introdueix el token: ")
+        if not token_input:
+            print("No token disponible")
+            return
+        token = token_input if token_input else self.token
+        # Llamar al DAO para validar el token y obtener el usuario
+        user = self.daoClient.loginToken(token)
+        if user:
+            # Mostrar info del usuario
+            self.viewUser(user)
         else:
             self.viewUserNotAutenticated()
 
