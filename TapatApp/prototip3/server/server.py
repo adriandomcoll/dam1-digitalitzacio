@@ -43,7 +43,7 @@ def login():
 
 
     # Login normal
-    data = request.get_json()
+    data = request.get_json() or {}
 
     username = data.get("username")
     password = data.get("password")
@@ -78,7 +78,7 @@ def login():
 
 @app.route('/child', methods=['POST'])
 def child():
-    token=request.headers.get("api-token")
+    token=request.headers.get("apikey")
     u=None
     if(token):
         # comprovar que el token existeix a un usuari
@@ -87,7 +87,7 @@ def child():
         print("USER:", u)
     
     if u:
-        #data = request.get_json()
+        # obtener children autorizados por user id
         childs=child_dao.getChilds(str(u['id']))
         response = ApiResponse(
                 msg="GetChilds",
@@ -110,7 +110,7 @@ def get_childs():
 
     token = request.headers.get("apikey")
 
-    data = request.get_json()
+    data = request.get_json() or {}
     childs = child_dao.getChilds()
 
     return jsonify({
@@ -118,6 +118,20 @@ def get_childs():
         "coderesponse": "1",
         "children": childs
     }), 200
+
+# Taps: obtener taps de un child
+@app.route('/child/<int:child_id>', methods=['GET'])
+def get_child_taps(child_id):
+    # opcional: validar token si se desea
+    token = request.headers.get("apikey")
+    if token:
+        u = user_dao.getUserByToken(token)
+        if not u:
+            return jsonify({"coderesponse": "0", "msg": "Access not granted"}), 400
+
+    taps = child_dao.get_taps(child_id)
+    response = ApiResponse(msg="GetTaps", coderesponse="1", data=taps)
+    return jsonify(asdict(response)), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -10,12 +10,13 @@ class ViewConsole:
         print("1: Login")
         print("2: Login Token")
         print("3: Child")
-        print("4: Quit")
+        print("4: Tap by id_child")
+        print("5: Quit")
         while(True):
             option=input("Enter Option: ")
             if(option.isdigit):
                 optionInt=int(option)
-                if(optionInt >0 and optionInt <5):
+                if(optionInt >0 and optionInt <6):
                     return optionInt
             
             print("Error: Introdueix una opció correcta")
@@ -34,10 +35,11 @@ class ViewConsole:
                     self.viewLoginToken(self.token)
                 case 3:
                     #Childs
-                    print("View Childs")
                     self.viewChilds(self.token)
-                    #self.viewLogin()
                 case 4:
+                    #Tap
+                    self.viewTaps()
+                case 5:
                     # Quit
                     exit()
                     print("Adeu, Gràcies per utilitzar l'aplicació")
@@ -52,7 +54,9 @@ class ViewConsole:
 
     def viewLoginToken(self, token):
         print("View LOGIN TOKEN")
-        resposta_user=self.daoClient.loginToken(token)
+        resposta_user=input("Introdueix el token: ")
+        token=resposta_user
+        self.daoClient.loginToken(token)
         if(resposta_user):
             self.viewUser(resposta_user)
             self.token=resposta_user.token
@@ -80,8 +84,19 @@ class ViewConsole:
         print("View User")
         print("User NOT Authenticated")
 
+    def viewTaps(self):
+        child_id = input("Introduce child_id: ")
+        if not child_id:
+            print("child_id requerido.")
+            return
+        taps = self.daoClient.tapId(child_id, self.token)
+        if taps is None:
+            print("Error al obtener taps o access denegado.")
+        else:
+            print(f"Taps para child {child_id}:")
+            for t in taps:
+                print(t)
 
 viewConsole=ViewConsole()
 
 viewConsole.viewGeneral()
- 

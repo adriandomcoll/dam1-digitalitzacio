@@ -71,6 +71,7 @@ class ChildDao:
         )
         return connection
 
+    # Mantengo el método que obtiene children a partir de token (útil en server)
     def getChildrenByUser(self, token):
         # Obtener user_id del token
         user_dao = UserDao()
@@ -79,41 +80,28 @@ class ChildDao:
             return []
         
         user_id = user['id']
-        
-        con = self.connectBBDD()
-        cursor = con.cursor(dictionary=True)
-        query = """
-            SELECT DISTINCT c.* FROM Child c
-            INNER JOIN RelationUserChild ruc ON c.id = ruc.child_id
-            WHERE ruc.user_id = %s
-        """
-        cursor.execute(query, (user_id,))
-        children = cursor.fetchall()
-        cursor.close()
-        con.close()
-        return children
+        return self.getChilds(user_id)
 
-    def getChilds(self):
+    # getChilds ahora acepta opcionalmente user_id para comportarse como los otros métodos
+    def getChilds(self, user_id=None):
         con = self.connectBBDD()
         cursor = con.cursor(dictionary=True)
-        query = "SELECT * FROM Child"
-        cursor.execute(query)
+        if user_id:
+            query = """
+                SELECT DISTINCT c.* FROM Child c
+                INNER JOIN RelationUserChild ruc ON c.id = ruc.child_id
+                WHERE ruc.user_id = %s
+            """
+            cursor.execute(query, (user_id,))
+        else:
+            query = "SELECT * FROM Child"
+            cursor.execute(query)
         children = cursor.fetchall()
         cursor.close()
         con.close()
         return children
     
-class TapDao:
-
-    def setTap(self, user_id, child_id, status):
-        con = self.connectBBDD()
-        cursor = con.cursor(dictionary=True)
-        query = "INSERT INTO Tap(child_id, status_id, user_id) VALUES (%s, %s, %s)"
-        cursor.execute(query, (child_id, status, user_id))
-        con.commit()
-        cursor.close()
-        con.close()
-    
+    # Devuelve taps por id (mantengo nombres existentes para compatibilidad)
     def getTapById(self, id):
         con = self.connectBBDD()
         cursor = con.cursor(dictionary=True)
@@ -144,3 +132,12 @@ class TapDao:
         cursor.close()
         con.close()
         return result
+    
+    def get_taps(self, child_id):
+        return self.getTapByChildId(child_id)
+
+'''    
+cdao=ChildDao()
+res=cdao.getTapByChildId("1")
+print(res)
+'''

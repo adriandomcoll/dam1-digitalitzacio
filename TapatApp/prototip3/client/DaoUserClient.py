@@ -58,10 +58,28 @@ class DaoUserClient:
             code_response=user_data_raw['coderesponse']
             if code_response == '1': # Usuari Validat  (self, id, username, password, email, idrole,token):
                 user_raw=user_data_raw['data']
-                print("type user_raw child/: ", type(user_raw))
                 return user_raw
         else:
             return None
+
+    def tapId(self, child_id, token=None):
+        URL = f"{self.base_URL}/child/{child_id}"
+        headers = {}
+        if token:
+            headers['apikey'] = token
+        try:
+            response = requests.get(URL, headers=headers, timeout=5)
+        except Exception:
+            return None
+        if response.status_code != 200:
+            return None
+        try:
+            data = response.json()
+        except Exception:
+            return None
+        if str(data.get("coderesponse")) == "1":
+            return data.get("data", [])
+        return None
 
 
 daoClient=DaoUserClient()
@@ -73,7 +91,7 @@ daoClient=DaoUserClient()
 #resposta=daoClient.login(user)
 #print(resposta)
 #print(daoClient.token)
-resposta=daoClient.childToken("3394116c3286fb20a3ffd2e3e64c0300e80bdaf97e07d4220faf349e5153fd89")
+resposta=daoClient.tapId("3394116c3286fb20a3ffd2e3e64c0300e80bdaf97e07d4220faf349e5153fd89")
 print(resposta)
 
 
