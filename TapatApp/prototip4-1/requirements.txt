@@ -1,0 +1,6 @@
+Flask
+Flask-MySQLdb
+Flask-JWT-Extended
+Marshmallow
+python-dotenv
+pytest
